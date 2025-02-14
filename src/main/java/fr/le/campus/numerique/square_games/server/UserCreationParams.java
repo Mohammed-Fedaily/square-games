@@ -7,7 +7,6 @@ import jakarta.validation.constraints.NotEmpty;
 public class UserCreationParams {
     private final @NotNull @Email String email;
     private final @NotEmpty String password;
-
     public UserCreationParams(@NotNull @Email String email, @NotEmpty String password) {
         this.email = email;
         this.password = password;
