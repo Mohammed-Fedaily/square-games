@@ -6,31 +6,36 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
     private final UserDao userDao;
 
-    public UserServiceImpl(@Qualifier("jdbcUserDao") UserDao userDao) {
+    public UserServiceImpl(@Qualifier("userDaoImpl") UserDao userDao) {
         this.userDao = userDao;
     }
 
     @Override
-    public UserEntity createUser(UserEntity user) {
+    public UserDto createUser(UserEntity user) {
         if (user.getId() == null) {
             user.setId(UUID.randomUUID().toString());
         }
-        return userDao.save(user);
+        UserEntity savedUser = userDao.save(user);
+        return new UserDto(savedUser.getId(), savedUser.getEmail());
     }
 
     @Override
-    public List<UserEntity> getAllUsers() {
-        return userDao.findAll();
+    public List<UserDto> getAllUsers() {
+        return userDao.findAll().stream()
+                .map(user -> new UserDto(user.getId(), user.getEmail()))
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Optional<UserEntity> getUserById(String userId) {
-        return userDao.findById(userId);
+    public Optional<UserDto> getUserById(String userId) {
+        return userDao.findById(userId)
+                .map(user -> new UserDto(user.getId(), user.getEmail()));
     }
 
     @Override

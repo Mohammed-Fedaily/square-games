@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserService {
-    UserEntity createUser(UserEntity user);
-    List<UserEntity> getAllUsers();
-    Optional<UserEntity> getUserById(String userId);
+    UserDto createUser(UserEntity user);
+    List<UserDto> getAllUsers();
+    Optional<UserDto> getUserById(String userId);
     void deleteUser(String userId);
 }

@@ -15,17 +15,17 @@ public class UserController {
     }
 
     @PostMapping
-    public UserEntity createUser(@RequestBody UserEntity user) {
+    public UserDto createUser(@RequestBody UserEntity user) {
         return userService.createUser(user);
     }
 
     @GetMapping("/{id}")
-    public Optional<UserEntity> getUserById(@PathVariable String id) {
+    public Optional<UserDto> getUserById(@PathVariable String id) {
         return userService.getUserById(id);
     }
 
     @GetMapping
-    public List<UserEntity> getAllUsers() {
+    public List<UserDto> getAllUsers() {
         return userService.getAllUsers();
     }
 
