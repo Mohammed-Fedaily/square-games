@@ -1,22 +1,36 @@
 package fr.le.campus.numerique.square_games.server;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import jakarta.validation.Valid;
+
+import java.util.List;
+import java.util.Optional;
 
 @RestController
+@RequestMapping("/users")
 public class UserController {
+    private final UserService userService;
 
-    @Autowired
-    private UserService userService;
-
-    @PostMapping("/users")
-    public UserDto createUser(@Valid @RequestBody UserCreationParams params) {
-        return userService.createUser(params);
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
-    @GetMapping("/users/{userId}")
-    public UserDto getUser(@PathVariable String userId) {
-        return userService.getUser(userId);
+    @PostMapping
+    public UserEntity createUser(@RequestBody UserEntity user) {
+        return userService.createUser(user);
+    }
+
+    @GetMapping("/{id}")
+    public Optional<UserEntity> getUserById(@PathVariable String id) {
+        return userService.getUserById(id);
+    }
+
+    @GetMapping
+    public List<UserEntity> getAllUsers() {
+        return userService.getAllUsers();
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteUser(@PathVariable String id) {
+        userService.deleteUser(id);
     }
 }

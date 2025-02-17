@@ -1,18 +1,16 @@
-
 package fr.le.campus.numerique.square_games.server;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 @Component
 public class UserDaoImpl implements UserDao {
+    private final UserRepository repository;
 
-    @Autowired
-    private UserRepository repository;
+    public UserDaoImpl(UserRepository repository) {
+        this.repository = repository;
+    }
 
     @Override
     public List<UserEntity> findAll() {
@@ -24,5 +22,13 @@ public class UserDaoImpl implements UserDao {
         return repository.findById(userId);
     }
 
+    @Override
+    public UserEntity save(UserEntity user) {
+        return repository.save(user);
+    }
 
+    @Override
+    public void delete(String userId) {
+        repository.deleteById(userId);
+    }
 }
