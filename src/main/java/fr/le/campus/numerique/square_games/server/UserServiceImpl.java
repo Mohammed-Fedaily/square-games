@@ -2,11 +2,8 @@ package fr.le.campus.numerique.square_games.server;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.stream.Collectors;
+
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -17,29 +14,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto createUser(UserEntity user) {
-        if (user.getId() == null) {
-            user.setId(UUID.randomUUID().toString());
-        }
-        UserEntity savedUser = userDao.save(user);
-        return new UserDto(savedUser.getId(), savedUser.getEmail());
+    public User createUser(User user) {
+        return userDao.save(user);
     }
 
     @Override
-    public List<UserDto> getAllUsers() {
-        return userDao.findAll().stream()
-                .map(user -> new UserDto(user.getId(), user.getEmail()))
-                .collect(Collectors.toList());
+    public User getUserById(String id) {
+        return userDao.findById(id);
     }
 
     @Override
-    public Optional<UserDto> getUserById(String userId) {
-        return userDao.findById(userId)
-                .map(user -> new UserDto(user.getId(), user.getEmail()));
+    public List<User> getAllUsers() {
+        return userDao.findAll();
     }
 
     @Override
-    public void deleteUser(String userId) {
-        userDao.delete(userId);
+    public void deleteUser(String id) {
+        userDao.delete(id);
     }
 }
