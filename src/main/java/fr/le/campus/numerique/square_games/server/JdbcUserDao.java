@@ -14,10 +14,10 @@ public class JdbcUserDao implements UserDao {
     }
 
     @Override
-    public List<UserEntity> findAll() {
+    public List<User> findAll() {
         String query = "SELECT * FROM users";
         return database.query(query, (resultSet, rowNum) -> {
-            UserEntity user = new UserEntity();
+            User user = new User();
             user.setId(resultSet.getString("id"));
             user.setEmail(resultSet.getString("email"));
             user.setPassword(resultSet.getString("password"));
@@ -26,16 +26,16 @@ public class JdbcUserDao implements UserDao {
     }
 
     @Override
-    public Optional<UserEntity> findById(String userId) {
+    public User findById(String userId) {
         String query = "SELECT * FROM users WHERE id = :id";
 
         Map<String, Object> params = Collections.singletonMap("id", userId);
 
-        List<UserEntity> users = database.query(
+        List<User> users = database.query(
                 query,
                 params,
                 (resultSet, rowNum) -> {
-                    UserEntity user = new UserEntity();
+                    User user = new User();
                     user.setId(resultSet.getString("id"));
                     user.setEmail(resultSet.getString("email"));
                     user.setPassword(resultSet.getString("password"));
@@ -43,16 +43,17 @@ public class JdbcUserDao implements UserDao {
                 }
         );
 
-        return users.stream().findFirst();
+        if (users.isEmpty()) {
+            throw new RuntimeException("User not found");
+        }
+        return users.get(0);
     }
 
     @Override
     @Transactional
-    public UserEntity save(UserEntity user) {
-        String sql = "INSERT INTO users (id, email, password) " +
-                "VALUES (:id, :email, :password) " +
-                "ON DUPLICATE KEY UPDATE " +
-                "email = :email, password = :password";
+    public User save(User user) {
+        String sql = "MERGE INTO users (id, email, password) " +
+                "KEY(id) VALUES (:id, :email, :password)";
 
         Map<String, Object> params = new HashMap<>();
         params.put("id", user.getId());

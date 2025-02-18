@@ -6,29 +6,30 @@ import java.util.Optional;
 
 @Component
 public class UserDaoImpl implements UserDao {
-    private final UserRepository repository;
+    private final UserRepository userRepository;
 
-    public UserDaoImpl(UserRepository repository) {
-        this.repository = repository;
+    public UserDaoImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @Override
-    public List<UserEntity> findAll() {
-        return repository.findAll();
+    public User save(User user) {
+        return userRepository.save(user);
     }
 
     @Override
-    public Optional<UserEntity> findById(String userId) {
-        return repository.findById(userId);
+    public User findById(String id) {
+        return userRepository.findById(id)
+       .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
     @Override
-    public UserEntity save(UserEntity user) {
-        return repository.save(user);
+    public List<User> findAll() {
+        return userRepository.findAll();
     }
 
     @Override
-    public void delete(String userId) {
-        repository.deleteById(userId);
+    public void delete(String id) {
+        userRepository.deleteById(id);
     }
 }
