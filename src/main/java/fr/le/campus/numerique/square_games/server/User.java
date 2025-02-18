@@ -1,23 +1,10 @@
 package fr.le.campus.numerique.square_games.server;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.validation.constraints.Email;
 import java.util.UUID;
 
-@Entity
-@Table(name = "users")
 public class User {
-    @Id
     private String id;
-
-    @Column(unique = true, nullable = false)
-    @Email
     private String email;
 
-    @Column(nullable = false)
     private String password;
 
     public User() {
@@ -25,7 +12,7 @@ public class User {
     }
 
     public User(String email, String password) {
-        this();
+        this.id = UUID.randomUUID().toString();
         this.email = email;
         this.password = password;
     }
